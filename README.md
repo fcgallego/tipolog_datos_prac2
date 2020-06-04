@@ -33,11 +33,11 @@ El dataset que analizaremos en esta práctica está relacionado con el hundimien
 
 La actividad ha sido realizada de manera conjunta por:
 
--Héctor Bastidas Vallejo
- hbastidasv@uoc.edu
+- Héctor Bastidas Vallejo
+  hbastidasv@uoc.edu
 
--Fernando Cachadiña
- fcachadinag@uoc.edu
+- Fernando Cachadiña
+  fcachadinag@uoc.edu
 
 
 
