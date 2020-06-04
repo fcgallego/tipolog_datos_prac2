@@ -42,7 +42,7 @@ La actividad ha sido realizada de manera conjunta por:
 
 
 
-## **Ficheros adjuntos **
+## **Ficheros adjuntos:**
 
 
 • **Practica2_Tipologia_memoria.pdf:**
