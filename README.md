@@ -1,6 +1,6 @@
-#**Práctica 2: Revisión, corrección y cálculos estadísticos del 'Dataset Titanic'**
+# **Práctica 2: Revisión, corrección y cálculos estadísticos del 'Dataset Titanic'**
 
-##**Objetivos de la actividad:**
+## **Objetivos de la actividad:**
 
 Los objetivos concretos de esta práctica son:
 
@@ -22,20 +22,27 @@ Los objetivos concretos de esta práctica son:
 **Hemos desarrollado la actividad en paralelo en Python y en R , apartado a apartado, para establecer además una comparativa.**
 
 
-##**Dataset empleado:**
+## **Dataset empleado:**
 
 El dataset que analizaremos en esta práctica está relacionado con el hundimiento del Titanic en 1912. El conjunto de datos es de libre acceso y está disponible en la plataforma Kaggle, el cual es utilizado para competencias de machine learning donde el principal objetivo es predecir cuales pasajeros sobrevivieron al naufragio del Titanic.
 
 
-##**Miembros del equipo:**
+
+
+## **Miembros del equipo:**
 
 La actividad ha sido realizada de manera conjunta por:
 
-Héctor Bastidas
+-Héctor Bastidas Vallejo
+ hbastidasv@uoc.edu
 
-Fernando Cachadiña 
+-Fernando Cachadiña
+ fcachadinag@uoc.edu
 
-##**Ficheros adjuntos **
+
+
+
+## **Ficheros adjuntos **
 
 
 • **Practica2_Tipologia_memoria.pdf:**
