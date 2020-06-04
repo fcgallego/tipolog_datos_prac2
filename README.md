@@ -35,18 +35,23 @@ Héctor Bastidas
 
 Fernando Cachadiña 
 
-## **Ficheros del código fuente**
+## **Ficheros adjuntos **
 
 
-• **Practica2_Tipologia_memoria.pdf: Fichero PDF con la memoria principal del análsis.**
+• **Practica2_Tipologia_memoria.pdf:**
+Fichero PDF con la memoria principal del análsis
 
-• **FCACHADINA_PRAC 2_DATOS.ipynb: Notebook Python 3.6 con el código empleado en la limpieza y procesado en Python.**
+• **fcachadina_prac_2_datos.ipynb:**
+Notebook Python 3.6 con el código empleado en la limpieza y procesado en Python.**
 
-• **XXXX.XXX: Código fuente de R-Studio con el código empleado en la limpieza y procesado en Python.**
+• **XXXX.XXX:** 
+Código fuente de R-Studio con el código empleado en la limpieza y procesado en Python.**
 
-• **titanicTraindata_python.csv : Fichero tipo CSV con los datos corregidos del dataset PYTHON.**
+• **titanicTraindata_python.csv :**
+Fichero tipo CSV con los datos corregidos del dataset PYTHON.**
 
-• **titanicXXXX.csv : Fichero tipo CSV con los datos corregidos del dataset R.**
+• **titanicXXXX.csv :**
+Fichero tipo CSV con los datos corregidos del dataset R.**
 
 
 
