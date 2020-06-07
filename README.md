@@ -51,16 +51,18 @@ Fichero PDF con la memoria principal del análsis
 • **fcachadina_prac_2_datos.ipynb:**
 Notebook Python 3.6 con el código empleado en la limpieza y procesado en Python.
 
-• **XXXX.XXX:** 
+• **limpieza_prac_2_R.Rmd:** 
 Código fuente de R-Studio con el código empleado en la limpieza y procesado en Python.
 
 • **titanicTraindata_python.csv :**
 Fichero tipo CSV con los datos corregidos del dataset PYTHON.
 
-• **titanicXXXX.csv :**
+• **titanicTraindata_R.csv:**
 Fichero tipo CSV con los datos corregidos del dataset R.
 
-
+• **train.csv:**
+Fichero tipo CSV con los datos originales de dataset Titanic descargado de los repositorios pú.
+blicos
 
  
 
