@@ -1,0 +1,287 @@
+---
+title: "Titanic: Machine Learning from Disaster"
+author: "Héctor Bastidas Vallejo, Fernando Cachadiña"
+date: '`r format(Sys.Date(),"%e de %B, %Y")`'
+output:
+  html_document:
+    toc: yes
+  pdf_document:
+    toc: yes
+bibliography: scholar.bib
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r load_libraries, include=FALSE}
+# Librerías necesarias para realizar el preprocesamiento de datos en R
+
+
+library(knitr) 
+library(plyr)  
+library(dplyr)
+library(stringr) 
+library(VIM) 
+library(kableExtra)
+library(psych)
+library(car)
+library(ggplot2)
+library(faraway)
+library(vcd) 
+library("ResourceSelection") 
+library(pROC) 
+library(nortest)
+library(pspearman)
+```
+
+## 1. Limpieza de datos
+
+```{r,eval=TRUE,echo=TRUE}
+# Lectura del fichero .csv 
+titanicTrainData <- read.csv("train.csv") 
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Estructura del datafrane
+str(titanicTrainData) 
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+# Resumen y valores perdidos en el dataset
+summary (titanicTrainData)
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Imputación de valores en la variable "Age" con la función kNN ()
+titanicTrainData$Age <- kNN(titanicTrainData, variable = c('Age'), k = 3)$Age
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Imputación de valores en la variable "Embarked" con el valor más frecuente
+suppressWarnings(suppressMessages(titanicTrainData[titanicTrainData==""]<-"S"))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Verificación después de la imputación
+summary (titanicTrainData)
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+# Verificación de valores extremos en la variable "Age"
+boxplot.stats(titanicTrainData$Age)$out
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Verificación de valores extremos en la variable "SibSp"
+boxplot.stats(titanicTrainData$SibSp)$out
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Verificación de valores extremos en la variable "Parch"
+boxplot.stats(titanicTrainData$Parch)$out
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Verificación de valores extremos en la variable "Fare"
+boxplot.stats(titanicTrainData$Fare)$out
+```
+
+## 2. Selección de grupos para el análisis
+
+```{r,eval=TRUE,echo=TRUE}
+# Agrupación por clase de boleto
+
+# Grupo de pasajeros de primera clase
+primeraClase <- subset(titanicTrainData, Pclass == 1)
+# Grupo de pasajeros de segunda clase
+segundaClase <- subset(titanicTrainData, Pclass == 2)
+# Grupo de pasajeros de tercera clase
+terceraClase <- subset(titanicTrainData, Pclass == 3)
+```
+
+
+```{r,eval=TRUE,echo=TRUE}
+# Agrupación por sexo
+
+# Grupo de pasajeros de sexo masculino
+sexoMasculino <- subset(titanicTrainData, Sex == 'male')
+# Grupo de pasajeros de sexo femenino
+sexoFemenino <- subset(titanicTrainData, Sex == 'female')
+
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Agrupación por puerto de embarque
+
+# Grupo de pasajeros que embarcaron en Cherbourg
+puertoCherbourg <- subset(titanicTrainData, Embarked == 'C')
+# Grupo de pasajeros que embarcaron en Queenstown
+puertoQueenstown <- subset(titanicTrainData, Embarked == 'Q')
+# Grupo de pasajeros que embarcaron en Southampton
+puertoSouthampton <- subset(titanicTrainData, Embarked == 'S')
+```
+
+
+## 3. Test de normalidad
+
+```{r,eval=TRUE,echo=TRUE}
+# Test de normalidad mediante el test de Shapiro-Wilk
+shapiro.test(titanicTrainData$Pclass)
+shapiro.test(titanicTrainData$Age)
+shapiro.test(titanicTrainData$SibSp)
+shapiro.test(titanicTrainData$Parch)
+shapiro.test(titanicTrainData$Fare)
+
+# Histograma de las variables
+hist(titanicTrainData$Pclass)
+hist(titanicTrainData$Age)
+hist(titanicTrainData$SibSp)
+hist(titanicTrainData$Parch)
+hist(titanicTrainData$Fare)
+```
+
+## 4. Test de igualdad de varianzas
+
+```{r,eval=TRUE,echo=TRUE}
+# Test de igualdad de varianzas mediante el test de Fligner-Killeen
+# Supervivencia por sexo
+fligner.test(Survived ~ Sex, data=titanicTrainData)
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Supervivencia por puerto de embarque
+fligner.test(Survived ~ Embarked, data=titanicTrainData)
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Supervivencia por clase de boleto
+
+# Convertimos la variable "Pclass" a tipo factor
+titanicTrainData$Pclass <- as.factor(titanicTrainData$Pclass)
+fligner.test(Survived ~ Pclass, data=titanicTrainData)
+```
+
+## 5. Correlación de variables
+
+```{r,eval=TRUE,echo=TRUE}
+# Test de correlación de Spearman de la variable "Age"
+suppressWarnings(suppressMessages(spearman.test(titanicTrainData$Age,titanicTrainData$Survived)))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Test de correlación de Spearman de la variable "SibSp"
+suppressWarnings(suppressMessages(spearman.test(titanicTrainData$SibSp,titanicTrainData$Survived)))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Test de correlación de Spearman de la variable "Parch"
+suppressWarnings(suppressMessages(spearman.test(titanicTrainData$Parch,titanicTrainData$Survived)))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Test de correlación de Spearman de la variable "Fare"
+suppressWarnings(suppressMessages(spearman.test(titanicTrainData$Fare,titanicTrainData$Survived)))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Test Chi Cuadrado 
+titanicTrainData$Survived <- as.factor(titanicTrainData$Survived)
+titanicTrainData$Survived <- droplevels(titanicTrainData$Survived)
+titanicTrainData$Embarked <- droplevels(titanicTrainData$Embarked)
+auxTableEmbarked <- table(titanicTrainData$Embarked , titanicTrainData$Survived) # Tabla de contingencia
+chisq.test(auxTableEmbarked, correct=TRUE) #"Yates’ Continuity Correction or Fisher’s Exact"
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Test Chi Cuadrado con la variable "Sex"
+auxTableSex <- table(titanicTrainData$Sex, titanicTrainData$Survived) # Tabla de contingencia
+chisq.test(auxTableSex, correct=TRUE) #"Yates’ Continuity Correction or Fisher’s Exact"
+```
+
+```{r,eval=TRUE,echo=TRUE}
+# Test Chi Cuadrado 
+auxTablePclass <- table(titanicTrainData$Pclass, titanicTrainData$Survived) # Tabla de contingencia
+chisq.test(auxTablePclass, correct=TRUE) #"Yates’ Continuity Correction or Fisher’s Exact"
+```
+
+## 6. Contraste de hipótesis
+```{r,eval=TRUE,echo=TRUE}
+
+diedGroup <- subset(titanicTrainData, Survived == 1) # Grupo de sobrevivientes
+survivedGroup <- subset(titanicTrainData, Survived == 0) # Grupo de fallecidos
+
+# Test de Wilcoxon para la variable "Fare" entre sobrevivientes y no sobrevivientes
+wilcox.test(x = diedGroup$Fare, y = survivedGroup$Fare, alternative = "greater", 
+            paired = FALSE, conf.int = 0.95)
+```
+
+
+## 7. Modelo de regresión logítica múltiple
+
+```{r,eval=TRUE,echo=TRUE}
+str(titanicTrainData)
+logitModel <- glm(titanicTrainData$Survived ~ titanicTrainData$Fare + titanicTrainData$Sex + titanicTrainData$Pclass + titanicTrainData$Age + titanicTrainData$SibSp + titanicTrainData$Embarked, data = titanicTrainData, family = "binomial")
+```
+
+```{r,eval=TRUE,echo=TRUE}
+test_prob1 = predict(logitModel, titanicTrainData, type = "response")
+test_roc1 = roc(titanicTrainData$Survived ~ test_prob1, plot = TRUE, print.auc = TRUE, smoothed = TRUE, show.thres=TRUE, auc.polygon=TRUE, ci=TRUE, percent=TRUE)
+as.numeric(test_roc1$auc)/100 # Área bajo la curva
+```
+
+## 8. Gráficos de distribuciones
+
+```{r,eval=TRUE,echo=TRUE}
+boxplot(titanicTrainData$Fare~Survived,data=titanicTrainData, main="Tarifa del boleto vs superviviencia", ylab="Tarifa del boleto", col=(c("coral3","deepskyblue3", "lightgoldenrod2")))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+boxplot(titanicTrainData$Age~Survived,data=titanicTrainData, main="Edad vs Superviviencia", ylab="Edad", col=(c("coral3","deepskyblue3", "lightgoldenrod2")))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+boxplot(titanicTrainData$SibSp~Survived,data=titanicTrainData, main="Número de hermanas/os vs superviviencia", ylab="Cantidad de hermanas/os", col=(c("coral3","deepskyblue3", "lightgoldenrod2")))
+```
+
+```{r,eval=TRUE,echo=TRUE}
+boxplot(titanicTrainData$Parch~Survived,data=titanicTrainData, main="Número de padres/hijos vs superviviencia", ylab="Cantidad de padres/hijos", col=(c("coral3","deepskyblue3", "lightgoldenrod2")))
+```
+
+## 9. Escritura del fichero limpio
+
+```{r,eval=TRUE,echo=TRUE}
+# Copiamos el conjunto de datos limpio en un nuevo fichero
+write.csv(titanicTrainData, 'titanicTraindata_R.csv')
+```
+
+
+
+#References
+
+https://www.theanalysisfactor.com/linear-models-r-plotting-regression-lines/
+https://economipedia.com/definiciones/r-cuadrado-coeficiente-determinacion.html
+https://blog.minitab.com/es/analisis-de-regresion-como-puedo-interpretar-el-r-cuadrado-y-evaluar-la-bondad-de-ajuste
+https://www.statmethods.net/stats/regression.html
+http://rstudio-pubs-static.s3.amazonaws.com/379699_e23d0c34255841e08d2eb4c98ff899fd.html
+https://rpubs.com/Joaquin_AR/226291
+http://ve.scielo.org/scielo.php?script=sci_arttext&pid=S0378-78182006000200007
+http://www.dm.uba.ar/materias/analisis_de_datos/2008/1/teoricas/Teor5.pdf
+https://stats.idre.ucla.edu/r/dae/logit-regression/
+https://rpubs.com/Joaquin_AR/229736
+https://thestatsgeek.com/2014/02/16/the-hosmer-lemeshow-goodness-of-fit-test-for-logistic-regression/
+https://thestatsgeek.com/2014/02/16/the-hosmer-lemeshow-goodness-of-fit-test-for-logistic-regression/
+http://ares.inf.um.es/00Rteam/pub/clas/II_ROC.html
+https://postdata-statistics.com/IntroEstadistica/Tutoriales/Tutorial-13.pdf 
+https://masteres.ugr.es/moea/pages/tfm-1213/tfm_caaadasreche_jluis/! 
+https://rviews.rstudio.com/2019/03/01/some-r-packages-for-roc-curves/
+https://es.wikipedia.org/wiki/Curva_ROC
+https://rpubs.com/chzelada/275494
+https://www.fisterra.com/mbe/investiga/curvas_roc/curvas_roc2.pdf
+https://www.rdocumentation.org/packages/pROC/versions/1.16.2/topics/roc
+https://daviddalpiaz.github.io/r4sl/logistic-regression.html#logistic-regression-with-glm
+
